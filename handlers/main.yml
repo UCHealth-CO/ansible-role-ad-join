@@ -1,8 +1,9 @@
 ---
-- name: restart auth services
+- name: restart realmd
   service:
     name: realmd
     state: restarted
+- name : restart sssd
   service:
     name: sssd
     state: restarted

@@ -18,7 +18,9 @@
     timeout: null
     responses:
       Password for *: "{{ ADJoinPassword }}"
-  notify: restart auth services
+  notify:
+    - restart realmd
+    - restart sssd
   when: domain_check.changed
 - name: write sssd.conf
   template:
@@ -28,14 +30,18 @@
     group: root
     mode: 0600
     backup: yes
-  notify: restart auth services
+  notify:
+    - restart realmd
+    - restart sssd
 #- name: Configure udp_preference_limit in /etc/krb5.conf
 #  ansible.builtin.lineinfile:
 #    path: /etc/krb5.conf
 #    regexp: '^udp_preference_limit = '
 #    line: "udp_preference_limit = 1"
 #    insertafter: '^\[libdefaults\]$'
-#  notify: restart auth services
+#  notify:
+#    - restart realmd
+#    - restart sssd
 - name: Start and enable the realmd service
   service:
     name: realmd
