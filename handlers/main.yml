@@ -1,0 +1,9 @@
+---
+- name: restart auth services
+  service:
+    name: realmd
+    state: restarted
+  service:
+    name: sssd
+    state: restarted
+...

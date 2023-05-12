@@ -1,0 +1,48 @@
+---
+- name: Install the required packages
+  yum:
+    name: realmd, oddjob-mkhomedir, sssd-krb5, sssd-ad, krb5-workstation, oddjob, oddjob-mkhomedir, sssd, samba-common-tools, python3
+    state: present
+- name: Check if server is already a domain member
+  shell: "realm list | grep -i -q {{ ADDomain }} && echo -n JOINED || echo -n NOTJOINED"
+  register: domain_check
+  changed_when: domain_check.stdout != 'JOINED'
+- name: Install pexpect using pip
+  pip:
+    name: pexpect
+    executable: pip3
+  when: domain_check.changed
+- name: Join system to AD and add the computer object in the Linux OU
+  expect:
+    command: "/bin/bash -c \"/usr/sbin/realm join -v -U {{ ADJoinUsername }} {{ ADDomain }}\""
+    timeout: null
+    responses:
+      Password for *: "{{ ADJoinPassword }}"
+  notify: restart auth services
+  when: domain_check.changed
+- name: write sssd.conf
+  template:
+    src: sssd.conf.j2
+    dest: /etc/sssd/sssd.conf
+    owner: root
+    group: root
+    mode: 0600
+    backup: yes
+  notify: restart auth services
+#- name: Configure udp_preference_limit in /etc/krb5.conf
+#  ansible.builtin.lineinfile:
+#    path: /etc/krb5.conf
+#    regexp: '^udp_preference_limit = '
+#    line: "udp_preference_limit = 1"
+#    insertafter: '^\[libdefaults\]$'
+#  notify: restart auth services
+- name: Start and enable the realmd service
+  service:
+    name: realmd
+    state: started
+    enabled: yes
+- name: Start and enable the sssd service
+  service:
+    name: sssd
+    state: started
+    enabled: yes

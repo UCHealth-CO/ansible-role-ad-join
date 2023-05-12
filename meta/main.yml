@@ -1,0 +1,9 @@
+---
+  galaxy_info:
+    role_name: ansible-role-ad-join
+    author: UC Health
+    description: Ansible role for joining the domain
+    company: UC Health
+  collections: []
+  dependencies: []
+...

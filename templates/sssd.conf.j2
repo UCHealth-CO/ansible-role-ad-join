@@ -1,0 +1,26 @@
+[sssd]
+domains = {{ ADDomain|lower}}
+config_file_version = 2
+services = nss, pam
+
+[domain/{{ ADDomain|lower}}]
+ad_domain = {{ ADDomain|lower}}
+krb5_realm = {{ ADDomain|upper}}
+realmd_tags = manages-system joined-with-adcli 
+cache_credentials = False
+id_provider = ad
+krb5_store_password_if_offline = True
+default_shell = /bin/bash
+ldap_id_mapping = True
+use_fully_qualified_names = False 
+fallback_homedir = /home/%u
+
+dyndns_update = false
+access_provider = ad
+#ad_access_filter
+auth_provider = ad
+chpass_provider = ad
+ldap_schema = ad
+override_gid = 1001
+ad_enable_gc = True
+ad_gpo_access_control = enforcing
