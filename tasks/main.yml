@@ -1,7 +1,7 @@
 ---
 - name: Install the required packages
   yum:
-    name: realmd, oddjob-mkhomedir, sssd-krb5, sssd-ad, krb5-workstation, oddjob, oddjob-mkhomedir, sssd, samba-common-tools, python3
+    name: adcli, realmd, sssd-krb5, sssd-ad, krb5-workstation, oddjob, oddjob-mkhomedir, sssd, samba-common-tools, python3, authselect-compat
     state: present
 - name: Check if server is already a domain member
   shell: "realm list | grep -i -q {{ ADDomain }} && echo -n JOINED || echo -n NOTJOINED"
