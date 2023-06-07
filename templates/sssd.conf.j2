@@ -17,7 +17,7 @@ fallback_homedir = /home/%u
 
 dyndns_update = false
 access_provider = ad
-#ad_access_filter
+#ad_access_filter ##removed prior to deployment
 auth_provider = ad
 chpass_provider = ad
 ldap_schema = ad
@@ -26,5 +26,4 @@ ad_enable_gc = True
 ad_gpo_access_control = enforcing
 
 [nss]
-#filter_users = epicadm
 filter_groups = epicuser
